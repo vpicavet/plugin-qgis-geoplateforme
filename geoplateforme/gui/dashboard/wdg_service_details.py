@@ -342,7 +342,7 @@ class ServiceDetailsWidget(QWidget):
             for val in urls:
                 if val["type"] == "WMS":
                     # Le CRS est défini a 3857 par defaut
-                    url = f"crs=EPSG:3857&format=image/png&layers={self._offering.layer_name}&styles&url={val['url'].split('?')[0]}?GetCapabilities"
+                    url = f"crs=EPSG:3857&format=image/png&layers={self._offering.layer_name}&styles&url={val['url'].split('?')[0]}"
                     if authid is not None:
                         url = f"authcfg={authid}&" + url
                     return QgsRasterLayer(url, self._offering.layer_name, "wms")
