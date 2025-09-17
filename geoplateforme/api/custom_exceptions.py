@@ -130,14 +130,6 @@ class UnavailableProcessingException(Exception):
     pass
 
 
-class UnavailableStoredData(Exception):
-    pass
-
-
-class UnavailableStoredDataException(Exception):
-    pass
-
-
 class UnavailableUploadException(Exception):
     pass
 

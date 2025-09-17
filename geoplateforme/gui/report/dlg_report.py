@@ -7,8 +7,8 @@ from qgis.PyQt.QtGui import QIcon, QPixmap
 from qgis.PyQt.QtWidgets import QAbstractItemView, QDialog, QHeaderView, QWidget
 
 from geoplateforme.api.custom_exceptions import (
+    ReadStoredDataException,
     UnavailableExecutionException,
-    UnavailableStoredData,
     UnavailableUploadException,
 )
 from geoplateforme.api.processing import ProcessingRequestManager
@@ -145,7 +145,7 @@ class ReportDialog(QDialog):
                     datastore_id=stored_data.datastore_id, stored_data_id=vectordb_id
                 )
                 self._add_stored_data_execution_logs(vectordb_stored_data)
-            except UnavailableStoredData as exc:
+            except ReadStoredDataException as exc:
                 self.log(
                     self.tr("Can't define execution logs : {0}").format(exc), push=True
                 )

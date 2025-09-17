@@ -19,8 +19,8 @@ from qgis.PyQt.QtWidgets import QHeaderView, QWizardPage
 from geoplateforme.__about__ import DIR_PLUGIN_ROOT
 from geoplateforme.api.check import CheckExecution
 from geoplateforme.api.custom_exceptions import (
+    ReadStoredDataException,
     UnavailableProcessingException,
-    UnavailableStoredData,
 )
 from geoplateforme.api.processing import Execution, ProcessingRequestManager
 from geoplateforme.api.stored_data import StoredDataRequestManager, StoredDataStatus
@@ -34,6 +34,7 @@ from geoplateforme.processing.generation.upload_database_integration import (
 )
 from geoplateforme.processing.utils import tags_to_qgs_parameter_matrix_string
 from geoplateforme.toolbelt import PlgLogger
+from geoplateforme.toolbelt.preferences import PlgOptionsManager
 
 
 class UploadDatabaseIntegrationPageWizard(QWizardPage):
@@ -74,8 +75,8 @@ class UploadDatabaseIntegrationPageWizard(QWizardPage):
             QByteArray(),
             self,
         )
-        self.upload_check_timer = QTimer(self)
-        self.upload_check_timer.timeout.connect(self.check_upload_status)
+        self.vector_db_check_timer = QTimer(self)
+        self.vector_db_check_timer.timeout.connect(self.check_vector_db_status)
 
         # Model for executions display
         self.mdl_execution_list = ExecutionListModel(self)
@@ -126,6 +127,11 @@ class UploadDatabaseIntegrationPageWizard(QWizardPage):
             self._vector_db_creation_finished,
         )
 
+        # Run timer for upload check
+        self.vector_db_check_timer.start(
+            int(PlgOptionsManager.get_plg_settings().status_check_sleep * 1000.0)
+        )
+
     def _vector_db_creation_finished(self, context, successful, results):
         """
         Callback executed when UploadDatabaseIntegrationAlgorithm is finished
@@ -144,7 +150,7 @@ class UploadDatabaseIntegrationPageWizard(QWizardPage):
                     "Génération de la base de données vectorielle en cours.\nVous pouvez fermer la fenêtre pendant la génération."
                 )
             )
-            self.check_upload_status()
+            self.check_vector_db_status()
             # Emit completeChanged to update finish button
             self.completeChanged.emit()
         else:
@@ -153,9 +159,9 @@ class UploadDatabaseIntegrationPageWizard(QWizardPage):
                 self.feedback.textLog(),
             )
 
-    def check_upload_status(self):
+    def check_vector_db_status(self):
         """
-        Check upload status and run database integration if upload closed
+        Check vector db status
 
         """
         self.mdl_execution_list.clear_executions()
@@ -210,11 +216,11 @@ class UploadDatabaseIntegrationPageWizard(QWizardPage):
                     )
                     self.lbl_step_icon.setMovie(QMovie())
                     self.lbl_step_icon.setPixmap(pixmap)
-                    self.upload_check_timer.stop()
+                    self.vector_db_check_timer.stop()
 
             except (
                 UnavailableProcessingException,
-                UnavailableStoredData,
+                ReadStoredDataException,
             ) as exc:
                 self._report_processing_error(
                     self.tr("Stored database integration check"), str(exc)
@@ -231,7 +237,7 @@ class UploadDatabaseIntegrationPageWizard(QWizardPage):
         result = self.isComplete()
 
         if result:
-            self.upload_check_timer.stop()
+            self.vector_db_check_timer.stop()
 
         return result
 
@@ -250,7 +256,7 @@ class UploadDatabaseIntegrationPageWizard(QWizardPage):
         return result
 
     def _stop_timer_and_display_error(self, error: str) -> None:
-        self.upload_check_timer.stop()
+        self.vector_db_check_timer.stop()
         self.setTitle(error)
         self.loading_movie.stop()
         self.lbl_step_icon.setMovie(QMovie())

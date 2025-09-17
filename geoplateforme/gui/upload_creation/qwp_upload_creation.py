@@ -19,8 +19,8 @@ from qgis.PyQt.QtWidgets import QHeaderView, QMessageBox, QWizardPage
 from geoplateforme.__about__ import DIR_PLUGIN_ROOT
 from geoplateforme.api.check import CheckExecution
 from geoplateforme.api.custom_exceptions import (
+    ReadStoredDataException,
     UnavailableProcessingException,
-    UnavailableStoredData,
     UnavailableUploadException,
 )
 from geoplateforme.api.processing import Execution, ProcessingRequestManager
@@ -329,10 +329,7 @@ class UploadCreationPageWizard(QWizardPage):
                     self.lbl_step_icon.setPixmap(pixmap)
                     self.upload_check_timer.stop()
 
-            except (
-                UnavailableProcessingException,
-                UnavailableStoredData,
-            ) as exc:
+            except (UnavailableProcessingException, ReadStoredDataException) as exc:
                 self._report_processing_error(
                     self.tr("Stored database integration check"), str(exc)
                 )

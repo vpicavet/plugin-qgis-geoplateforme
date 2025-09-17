@@ -21,7 +21,6 @@ from geoplateforme.api.custom_exceptions import (
     LaunchExecutionException,
     ReadStoredDataException,
     UnavailableProcessingException,
-    UnavailableStoredData,
 )
 from geoplateforme.api.processing import ProcessingRequestManager
 from geoplateforme.api.stored_data import StoredDataRequestManager, StoredDataStatus
@@ -294,7 +293,7 @@ class TileCreationAlgorithm(QgsProcessingAlgorithm):
                 # Wait for tile creation
                 self._wait_tile_creation(datastore, stored_data_id, feedback)
 
-        except UnavailableStoredData as exc:
+        except ReadStoredDataException as exc:
             raise QgsProcessingException(
                 f"Can't retrieve vector db datastore for tile creation : {exc}"
             )

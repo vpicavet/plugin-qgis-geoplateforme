@@ -22,8 +22,8 @@ from geoplateforme.api.configuration import ConfigurationRequestManager
 from geoplateforme.api.custom_exceptions import (
     ReadConfigurationException,
     ReadOfferingException,
+    ReadStoredDataException,
     UnavailableProcessingException,
-    UnavailableStoredData,
     UnavailableUploadException,
 )
 from geoplateforme.api.datastore import DatastoreRequestManager
@@ -315,7 +315,7 @@ class TileGenerationStatusPageWizard(QWizardPage):
 
                     self.mdl_execution_list.set_execution_list([execution])
             except (
-                UnavailableStoredData,
+                ReadStoredDataException,
                 UnavailableProcessingException,
                 UnavailableUploadException,
             ) as exc:

@@ -19,8 +19,8 @@ from qgis.PyQt.QtWidgets import QHeaderView, QMessageBox, QWizardPage
 # plugin
 from geoplateforme.__about__ import DIR_PLUGIN_ROOT
 from geoplateforme.api.custom_exceptions import (
+    ReadStoredDataException,
     UnavailableProcessingException,
-    UnavailableStoredData,
     UnavailableUploadException,
 )
 from geoplateforme.api.processing import ProcessingRequestManager
@@ -272,9 +272,9 @@ class TileGenerationStatusPageWizard(QWizardPage):
 
                     self.mdl_execution_list.set_execution_list([execution])
             except (
-                UnavailableStoredData,
                 UnavailableProcessingException,
                 UnavailableUploadException,
+                ReadStoredDataException,
             ) as exc:
                 self._report_processing_error(
                     self.tr("Stored data check status"), str(exc)
