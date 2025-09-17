@@ -19,38 +19,34 @@
   <layout class="QGridLayout" name="gridLayout">
    <item row="4" column="0" rowspan="2">
     <widget class="QLabel" name="lbl_zoom">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
      <property name="text">
       <string>Max and min zoom levels:</string>
      </property>
     </widget>
    </item>
-   <item row="4" column="2">
-    <widget class="RangeSlider" name="levels_range_slider" native="true">
+   <item row="5" column="1" colspan="3">
+    <widget class="QgsScaleRangeWidget" name="srw_zoom">
      <property name="cursor">
-      <cursorShape>ClosedHandCursor</cursorShape>
+      <cursorShape>ArrowCursor</cursorShape>
      </property>
     </widget>
    </item>
-   <item row="6" column="2">
-    <spacer name="verticalSpacer">
-     <property name="orientation">
-      <enum>Qt::Vertical</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>20</width>
-       <height>40</height>
-      </size>
-     </property>
-    </spacer>
-   </item>
-   <item row="2" column="0">
-    <widget class="QLabel" name="lbl_name">
-     <property name="autoFillBackground">
-      <bool>true</bool>
+   <item row="4" column="1">
+    <widget class="QLabel" name="lbl_min_zoom">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
      </property>
      <property name="text">
-      <string>Tile name:</string>
+      <string notr="true">&lt;min_zoom&gt;</string>
      </property>
     </widget>
    </item>
@@ -67,10 +63,26 @@
      </property>
     </widget>
    </item>
-   <item row="5" column="1" colspan="3">
-    <widget class="QgsScaleRangeWidget" name="srw_zoom">
+   <item row="4" column="2">
+    <widget class="RangeSlider" name="levels_range_slider" native="true">
      <property name="cursor">
-      <cursorShape>ArrowCursor</cursorShape>
+      <cursorShape>ClosedHandCursor</cursorShape>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0">
+    <widget class="QLabel" name="lbl_name">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="autoFillBackground">
+      <bool>true</bool>
+     </property>
+     <property name="text">
+      <string>Tile name:</string>
      </property>
     </widget>
    </item>
@@ -87,8 +99,8 @@
      </property>
     </widget>
    </item>
-   <item row="4" column="1">
-    <widget class="QLabel" name="lbl_min_zoom">
+   <item row="6" column="0">
+    <widget class="QLabel" name="lbl_api_key">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
        <horstretch>0</horstretch>
@@ -96,9 +108,25 @@
       </sizepolicy>
      </property>
      <property name="text">
-      <string notr="true">&lt;min_zoom&gt;</string>
+      <string>Api key</string>
      </property>
     </widget>
+   </item>
+   <item row="6" column="1" colspan="3">
+    <widget class="QLineEdit" name="lne_api_key"/>
+   </item>
+   <item row="7" column="0" colspan="3">
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
    </item>
   </layout>
  </widget>

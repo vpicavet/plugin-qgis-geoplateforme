@@ -272,6 +272,10 @@ class RasterTilesFromWmsVectorAlgorithm(QgsProcessingAlgorithm):
         width = self.parameterAsInt(parameters, self.WIDTH, context)
         height = self.parameterAsInt(parameters, self.HEIGHT, context)
 
+        harvest_extra_str = self.parameterAsString(
+            parameters, self.HARVEST_EXTRA, context
+        )
+
         harvest_url = self.parameterAsString(
             parameters,
             self.HARVEST_URL,
@@ -324,6 +328,9 @@ class RasterTilesFromWmsVectorAlgorithm(QgsProcessingAlgorithm):
                 "samplesperpixel": samples_per_pixel,
                 "height": height,
             }
+
+            if harvest_extra_str:
+                parameters["harvest_extras"] = harvest_extra_str
 
             # Create execution
             data_map = {

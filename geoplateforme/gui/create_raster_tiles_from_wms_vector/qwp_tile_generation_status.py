@@ -223,6 +223,11 @@ class TileGenerationStatusPageWizard(QWizardPage):
             ),
         }
 
+        if self.qwp_tile_generation_edition.use_api_key:
+            params[RasterTilesFromWmsVectorAlgorithm.HARVEST_EXTRA] = (
+                f"apikey={self.qwp_tile_generation_edition.get_api_key()}"
+            )
+
         self.lbl_step_icon.setMovie(self.loading_movie)
         self.loading_movie.start()
 

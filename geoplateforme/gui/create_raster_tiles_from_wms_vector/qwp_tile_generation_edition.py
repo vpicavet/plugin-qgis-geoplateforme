@@ -6,6 +6,7 @@ from qgis.PyQt import QtCore, uic
 from qgis.PyQt.QtWidgets import QMessageBox, QSlider, QWizardPage
 
 # Plugin
+from geoplateforme.api.offerings import OfferingsRequestManager
 from geoplateforme.gui.lne_validators import lower_case_num_qval
 
 
@@ -59,6 +60,12 @@ class TileGenerationEditionPageWizard(QWizardPage):
         self.dataset_name = dataset_name
         self.offering_id = offering_id
 
+        manager = OfferingsRequestManager()
+        offering = manager.get_offering(self.datastore_id, self.offering_id)
+        self.use_api_key = not offering.open
+        self.lbl_api_key.setVisible(self.use_api_key)
+        self.lne_api_key.setVisible(self.use_api_key)
+
         # To avoid some characters
         self.lne_name.setValidator(lower_case_num_qval)
 
@@ -90,6 +97,7 @@ class TileGenerationEditionPageWizard(QWizardPage):
         Returns: True
 
         """
+        valid = True
         if len(self.lne_name.text()) == 0:
             valid = False
             QMessageBox.warning(
@@ -97,8 +105,16 @@ class TileGenerationEditionPageWizard(QWizardPage):
                 self.tr("Missing informations."),
                 self.tr("Please define tile name."),
             )
-        else:
-            valid = True
+        if self.use_api_key and len(self.get_api_key()) == 0:
+            valid = False
+            QMessageBox.warning(
+                self,
+                self.tr("Missing informations."),
+                self.tr(
+                    "Please define api key for private service use.`n You can get an api key with a HASH key."
+                ),
+            )
+
         return valid
 
     def get_bottom_level(self) -> int:
@@ -131,3 +147,11 @@ class TileGenerationEditionPageWizard(QWizardPage):
 
         self.lbl_min_zoom.setText(str(self.levels_range_slider.low()))
         self.lbl_max_zoom.setText(str(self.levels_range_slider.high()))
+
+    def get_api_key(self) -> str:
+        """Get api key to use in case of closed offering
+
+        :return: api key
+        :rtype: str
+        """
+        return self.lne_api_key.text()
