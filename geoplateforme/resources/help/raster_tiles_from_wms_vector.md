@@ -22,6 +22,7 @@ Création de tuiles raster depuis un service WMS-VECTOR.
 | Identifiant du quadrillage à utiliser (Tile Matrix Set) | `TMS`      | Identifiant du quadrillage à utiliser (Tile Matrix Set). Défaut : PM |
 | Format des canaux dans les dalles en sortie | `SAMPLE_FORMAT`      | Format des canaux dans les dalles en sortie. Valeurs possible : "UINT8", "FLOAT32" |
 | Nombre de canaux dans les dalles en sortie | `SAMPLES_PER_PIXEL`      | Nombre de canaux dans les dalles en sortie. Valeur entre 1 et 4, défaut : 3 |
+| Nombre de thread pour la parallelisation | `PARALLELIZATION`      | Nombre de thread pour la parallelisation. Valeur entre 1 et 8, défaut : 4 |
 | Attendre la fin de la génération  ? | `WAIT_FOR_GENERATION` | Option pour attendre la fin de la génération avant de sortir du traitement, permet de vérifier si les tuiles raster ont été correctement générées. (Désactivée par défaut) |
 | Tags à ajouter | `TAGS`  | List de tags à importer. Format `"clé 1,valeur 1;clé 2,valeur 2;..;clé n,valeur n"` |
 
