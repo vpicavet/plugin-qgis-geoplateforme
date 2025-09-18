@@ -280,9 +280,8 @@ class Metadata:
                     all_keywords_field = ident_el.findall(
                         "./{*}descriptiveKeywords/{*}MD_Keywords"
                     )
-                    if len(all_keywords_field) > 0:
-                        self._fields.free_keywords = []
-                        self._fields.inspire_keywords = []
+                    self._fields.free_keywords = []
+                    self._fields.inspire_keywords = []
                     for keywords_group in all_keywords_field:
                         keywords_field = keywords_group.findall(
                             "./{*}keyword/{*}CharacterString"
@@ -302,8 +301,8 @@ class Metadata:
                     topics_field = ident_el.findall(
                         "./{*}topicCategory/{*}MD_TopicCategoryCode"
                     )
+                    self._fields.topics = []
                     if len(topics_field) > 0:
-                        self._fields.topics = []
                         for topic in topics_field:
                             self._fields.topics.append(topic.text)
 
