@@ -234,7 +234,15 @@ class ProviderDialog(QgsAbstractDataSourceWidget):
         if result:
             authid = None
             if result["open"] is False:
-                auth_dlg = ChooseAuthenticationDialog()
+                metadata_url = None
+                if "metadata_urls" in result and len(result["metadata_urls"]) > 0:
+                    for url in result["metadata_urls"]:
+                        if "cartes.gouv.fr" in url:
+                            metadata_url = url
+                if metadata_url is not None:
+                    auth_dlg = ChooseAuthenticationDialog(metadata_url)
+                else:
+                    auth_dlg = ChooseAuthenticationDialog()
                 if auth_dlg.exec():
                     authid = auth_dlg.authent.configId()
                 else:
@@ -317,10 +325,15 @@ class ProviderDialog(QgsAbstractDataSourceWidget):
         ]
         item_number = 0
 
+        metadata_url = None
         if "metadata_urls" in metadata and len(metadata["metadata_urls"]) > 0:
+            for url in metadata["metadata_urls"]:
+                if "cartes.gouv.fr" in url:
+                    metadata_url = url
+        if metadata_url is not None:
             link = QPushButton()
             link.setText("Open in cartes.gouv.fr")
-            link.clicked.connect(lambda: webbrowser.open(metadata["metadata_urls"][0]))
+            link.clicked.connect(lambda: webbrowser.open(metadata_url))
             self.metadataLayout.addWidget(link, item_number, 0, 1, 2)
             item_number += 1
 

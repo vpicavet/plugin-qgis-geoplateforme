@@ -1,3 +1,5 @@
+from typing import Optional
+
 from qgis.gui import QgsAuthConfigSelect, QgsCollapsibleGroupBox
 from qgis.PyQt.QtGui import QIcon
 from qgis.PyQt.QtWidgets import (
@@ -13,7 +15,7 @@ from geoplateforme.gui.user_keys.dlg_user_keys import UserKeysDialog
 
 
 class ChooseAuthenticationDialog(QDialog):
-    def __init__(self):
+    def __init__(self, metadata_link: Optional[str] = None):
         super().__init__()
 
         self.dlg_user_keys = None
@@ -35,14 +37,22 @@ class ChooseAuthenticationDialog(QDialog):
         self.authent = QgsAuthConfigSelect()
         self.authent.setObjectName("authent")
 
+        link = ""
+        if metadata_link is not None:
+            link = f': <a href="{metadata_link}">link to metadata</a>'
+
         gb_information = QgsCollapsibleGroupBox("Informations")
         information_layout = QVBoxLayout(gb_information)
-        information_message = QLabel("""
-            Please contact data producer for grant access
-
-            If you already have grant access in geoplateforme,
+        information_message = QLabel(f"""
+            Please contact data producer for grant access {link}<br>
+            <br>
+            If you already have grant access in geoplateforme,<br>
             authentication configuration can be generate here :
         """)
+        # information_message.setTextFormat(Qt.RichText)
+        # information_message.setTextInteractionFlags(Qt.TextBrowserInteraction);
+        information_message.setOpenExternalLinks(True)
+
         btn_user_keys = QPushButton("User keys configuration")
         btn_user_keys.setIcon(QIcon(":images/themes/default/locked.svg"))
         btn_user_keys.clicked.connect(self.user_key_configuration)
