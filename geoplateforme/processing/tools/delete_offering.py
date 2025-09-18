@@ -6,6 +6,7 @@ from time import sleep
 from typing import Optional
 
 from qgis.core import (
+    QgsApplication,
     QgsProcessingAlgorithm,
     QgsProcessingException,
     QgsProcessingParameterString,
@@ -25,6 +26,9 @@ from geoplateforme.api.custom_exceptions import (
 from geoplateforme.api.datastore import DatastoreRequestManager
 from geoplateforme.api.metadata import MetadataRequestManager
 from geoplateforme.api.offerings import OfferingsRequestManager, OfferingStatus
+from geoplateforme.processing.style.delete_configuration_style import (
+    DeleteConfigurationStyleAlgorithm,
+)
 from geoplateforme.processing.utils import get_short_string, get_user_manual_url
 
 
@@ -146,6 +150,36 @@ class DeleteOfferingAlgorithm(QgsProcessingAlgorithm):
             feedback.pushInfo(
                 self.tr("Suppression de la configuration associée à l'offre")
             )
+
+            # Suppression des styles associés
+            config_style = None
+            extra = offering.configuration.extra
+            if extra is not None:
+                config_style = extra.get("styles", None)
+                if config_style:
+                    feedback.pushInfo(
+                        self.tr("Suppression des styles associés à la configuration")
+                    )
+                    algo_str = (
+                        f"geoplateforme:{DeleteConfigurationStyleAlgorithm().name()}"
+                    )
+                    alg = QgsApplication.processingRegistry().algorithmById(algo_str)
+
+                    # Delete each style
+                    for style in config_style:
+                        params = {
+                            DeleteConfigurationStyleAlgorithm.DATASTORE_ID: offering.configuration.datastore_id,
+                            DeleteConfigurationStyleAlgorithm.CONFIGURATION_ID: offering.configuration._id,
+                            DeleteConfigurationStyleAlgorithm.STYLE_NAME: style["name"],
+                        }
+                        _, successful = alg.run(params, context, feedback)
+                        if not successful:
+                            raise QgsProcessingException(
+                                self.tr(
+                                    "Erreur lors de la suppression du style {}"
+                                ).format(style["name"])
+                            )
+
             manager_config = ConfigurationRequestManager()
             try:
                 manager_config.delete_configuration(
