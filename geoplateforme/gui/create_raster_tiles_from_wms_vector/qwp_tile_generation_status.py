@@ -205,7 +205,7 @@ class TileGenerationStatusPageWizard(QWizardPage):
         top_level: int = self.qwp_tile_generation_edition.get_top_level()
 
         harvest_levels_str = ",".join(
-            [str(val) for val in range(top_level, bottom_level)]
+            [str(val) for val in reversed(range(top_level, bottom_level))]
         )
 
         params = {

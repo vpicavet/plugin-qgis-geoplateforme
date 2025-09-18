@@ -275,6 +275,7 @@ class RasterTilesFromWmsVectorAlgorithm(QgsProcessingAlgorithm):
         harvest_level = harvest_level_str.split(",")
 
         bottom = self.parameterAsInt(parameters, self.BOTTOM, context)
+        top = self.parameterAsInt(parameters, self.TOP, context)
         parallelization = self.parameterAsInt(parameters, self.PARALLELIZATION, context)
 
         harvest_layers_str = self.parameterAsString(
@@ -327,6 +328,7 @@ class RasterTilesFromWmsVectorAlgorithm(QgsProcessingAlgorithm):
             parameters = {
                 "harvest_levels": harvest_level,
                 "bottom": str(bottom),
+                "top": str(top),
                 "harvest_layers": harvest_layers_str,
                 "parallelization": parallelization,
                 "harvest_area": harvest_area.asWkt(),
